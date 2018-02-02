@@ -10,12 +10,9 @@ window.onload = function() {
     // 定义图表属性类
     function ChartProperty(){}
     var chartProperty = new ChartProperty();
-    chartProperty.actualValue = 0.3; // 实际值, 即液柱显示的值
+    chartProperty.actualValue = 0.5; // 实际值, 即液柱显示的值
     chartProperty.plannedValue = 0.4; // 计划值, 即三角指向的值
     chartProperty.isMouseOver = false; // 鼠标是否在液柱上, true: 在液柱上, false: 不在液柱上
-    
-    var current = 300; // 液柱当前的值
-    var index2 = 330; // 三角形指向的值
 
     // 取得canvas context对象
     var myCanvasContext = myCanvas.getContext("2d");
@@ -40,6 +37,10 @@ window.onload = function() {
         // 获取鼠标坐标
         var x = event.clientX - myCanvas.offsetLeft;
         var y = event.clientY - myCanvas.offsetTop;
+
+        // 提示框
+        var tooltip = document.getElementById("myCanvasTooltip");
+        tooltip.innerHTML = "当前值: "+chartProperty.actualValue.toFixed(2)+"</br>"+"计划值: "+chartProperty.plannedValue.toFixed(2);
         
         if (x>27 && x<369 && y>142 && y<157) { // 如果鼠标在液柱上, 重新绘制图表
             chartProperty.isMouseOver = true;
@@ -47,11 +48,20 @@ window.onload = function() {
             chartProperty.mouseY = y;
             myCanvasContext.clearRect(0, 0, myCanvasContext.width, myCanvasContext.height);
             draw(myCanvasContext, chartProperty);
+
+            // 显示提示框
+            tooltip.style.left = event.clientX - 105 + "px";
+            if (tooltip.style.left < "10px") {
+                tooltip.style.left = event.clientX + "px";
+            }
+            tooltip.style.top = event.clientY - 55 + "px";
+            tooltip.style.visibility = "visible";
         }else{
             if (chartProperty.isMouseOver == true) { // 如果鼠标从液柱上移开, 重新绘制图表
                 chartProperty.isMouseOver = false;
                 myCanvasContext.clearRect(0, 0, myCanvasContext.width, myCanvasContext.height);
                 draw(myCanvasContext, chartProperty);
+                tooltip.style.visibility = "hidden";
             }
         }
     });
@@ -208,14 +218,5 @@ function draw(myCanvasContext, chartProperty) {
         myCanvasContext.lineTo(36+i*3.42, downScopeBaseHeight);
         myCanvasContext.closePath();
         myCanvasContext.fill();
-
-        // Layer 6 提示框
-        myCanvasContext.restore();
-        myCanvasContext.save();
-
-        // 颜色
-        // 形状
-        myCanvasContext.beginPath();
-        myCanvasContext.moveTo();
     }
 }

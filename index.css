@@ -1,3 +1,12 @@
 #myCanvas {
     border: 1px solid #d3d3d3;
 }
+
+#myCanvasTooltip {
+    background-color: rgba(128, 128, 128, 0.8);
+    visibility: hidden;
+    position: fixed;
+    border-radius: 5px;
+    padding: 5px;
+    color: white;
+}
