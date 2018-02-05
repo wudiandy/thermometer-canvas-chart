@@ -1,4 +1,12 @@
-window.onload = function() {
+window.onload = predraw();
+window.onresize = function(){
+    predraw();
+};
+
+/**
+ * 画图之前的准备工作
+ */
+function predraw() {
     "use strict";
 
     var myCanvas = document.getElementById("myCanvas");
@@ -89,7 +97,7 @@ window.onload = function() {
  */
 function draw(myCanvasContext, chartProperty) {
     "use strict";
-    
+
     var index = chartProperty.actualValue*342;
     var index2 = chartProperty.plannedValue*342;
 
