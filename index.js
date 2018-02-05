@@ -4,8 +4,16 @@ window.onload = function() {
     var myCanvas = document.getElementById("myCanvas");
 
     // 设置canvas的宽度为浏览器的宽度
-    // myCanvas.style.width = window.innerWidth-30+"px";
-    // myCanvas.style.height = window.innerHeight-30+"px";
+    myCanvas.style.width = window.innerWidth-30+"px";
+    myCanvas.style.height = window.innerHeight-30+"px";
+
+    // 计算系数
+    // 当canvas的长和宽改变的时候, canvas中的图像会在原图像的基础上成比例放缩
+    // 原图像是在宽400px, 高300px的canvas上绘制的
+    // 当canvas被拉伸的时候, 宽度变成400widthFactor, 高度变成300heightFactor
+    // 为了能正确监测鼠标是否在液柱之上, 需要计算出以上两个系数
+    var widthFactor = (window.innerWidth-30) / 400;
+    var heightFactor = (window.innerHeight-30) / 300;
 
     // 定义图表属性类
     function ChartProperty(){}
@@ -33,6 +41,7 @@ window.onload = function() {
 
     // 鼠标事件
     myCanvas.addEventListener("mousemove", function(event){
+        console.log(myCanvas.clientWidth+","+myCanvas.clientHeight);
         // 判断鼠标是否在液柱上
         // 获取鼠标坐标
         var x = event.clientX - myCanvas.offsetLeft;
@@ -41,8 +50,14 @@ window.onload = function() {
         // 提示框
         var tooltip = document.getElementById("myCanvasTooltip");
         tooltip.innerHTML = "当前值: "+chartProperty.actualValue.toFixed(2)+"</br>"+"计划值: "+chartProperty.plannedValue.toFixed(2);
+
+        // 计算液柱范围
+        var minX = 27*widthFactor;
+        var maxX = 369*widthFactor;
+        var minY = 142*heightFactor;
+        var maxY = 157*heightFactor;
         
-        if (x>27 && x<369 && y>142 && y<157) { // 如果鼠标在液柱上, 重新绘制图表
+        if (x>minX && x<maxX && y>minY && y<maxY) { // 如果鼠标在液柱上, 重新绘制图表
             chartProperty.isMouseOver = true;
             chartProperty.mouseX = x;
             chartProperty.mouseY = y;
@@ -73,6 +88,8 @@ window.onload = function() {
  * @param {Object} chartProperty 图表属性对象
  */
 function draw(myCanvasContext, chartProperty) {
+    "use strict";
+    
     var index = chartProperty.actualValue*342;
     var index2 = chartProperty.plannedValue*342;
 
